@@ -1,0 +1,203 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Home{% endblock title %}
+    <script src="https://polyfill.io/v3/polyfill.min.js?version=3.52.1&features=fetch"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+{% block content %}
+
+<div>
+    <div class="ps-breadcrumb">
+        <div class="ps-container">
+            <ul class="breadcrumb">
+                <li><a href="{% url 'pages:home' %}">Home</a></li>
+
+                <li>{{product.product_name}}</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="ps-page--product">
+        <div class="ps-container">
+            <div class="ps-page__container">
+                <div class="ps-page__left">
+                    <div class="ps-product--detail ps-product--fullwidth">
+                        <div class="ps-product__header">
+                            <div class="ps-product__thumbnail" data-vertical="true">
+                                <figure>
+                                    <div class="ps-wrapper">
+                                        <div class="ps-product__gallery" data-arrow="true">
+
+                                            <div class="item"><a href="img/products/detail/fullwidth/2.jpg"><img
+                                                        src="{{product.picture.url}}" alt=""></a></div>
+
+                                        </div>
+                                    </div>
+                                </figure>
+                                <div class="ps-product__variants" data-item="4" data-md="4" data-sm="4"
+                                    data-arrow="false">
+                                    <div class="item"><img src="{{product.picture.url}}" alt=""></div>
+
+                                </div>
+                            </div>
+
+
+                            <div class="ps-product__info">
+                                <h1>{{product.product_name}}</h1>
+                                <div class="ps-product__meta">
+                                    <p>Category:<a href="shop-default.html">{{product.category}}</a></p>
+
+                                </div>
+                                <h4 class="ps-product__price">{{product.price}}£</h4>
+                                <div class="ps-product__desc">
+                                    <ul class="ps-list--dot">
+                                        <li>Type: {{product.type}}</li>
+                                        <li>Age: {{product.age}} </li>
+                                        <li>ABV: {{product.abv}}% </li>
+
+
+
+                                    </ul>
+
+                                </div>
+
+                                <div class="ps-product__shopping">
+                                    <figure>
+                                        <figcaption>Quantity</figcaption>
+                                        <div class="form-group--number">
+                                            <button onclick="increment()" class="up"><i class="fa fa-plus" ></i></button>
+                                            <button onclick="decrement()" class="down"><i class="fa fa-minus"></i></button>
+                                            <input class="form-control" id="quantity" type="text" placeholder="1" value="1">
+                                        </div>
+                                    </figure>
+
+                                    <form action="" method="post">
+                                        <button class="ps-btn ps-btn--black">Add to cart</button>
+                                        <input type="hidden" name="add-to-cart" id="add-to-cart" value="1">
+                                    </form>
+
+                                    <form action="{% url 'products:buy-now' %}" method="POST">
+                                        {% csrf_token %}
+                                        <button class="ps-btn" >Buy Now</button>
+                                        <input type="hidden" name="product_id" value="{{product.pk}}">
+                                        <input type="hidden" name="buy-now" id="buy-now" value="1">
+                                    </form>
+
+                                </div>
+                                <script>
+
+                                    function increment(){
+                                        quantity = document.getElementById('quantity').value;
+                                        quantity++;
+                                        document.getElementById('quantity').value = quantity;
+                                        document.getElementById('buy-now').value = quantity;
+                                        $('#quantity').attr('placeholder',quantity);
+                                    }
+
+                                    function decrement(){
+                                        quantity = document.getElementById('quantity').value;
+                                        if (quantity > 1) {
+                                            quantity--;
+                                        }
+                                        document.getElementById('buy-now').value = quantity;
+                                        document.getElementById('quantity').value = quantity;
+                                        $('#quantity').attr('placeholder',quantity);
+                                    }
+
+                                </script>
+
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="ps-page__right">
+                    <aside class="widget widget_product widget_features">
+                        <p><i class="icon-network"></i> Shipping worldwide</p>
+                        <p><i class="icon-3d-rotate"></i> Free 7-day return if eligible, so easy</p>
+                        <p><i class="icon-receipt"></i> Supplier give bills for this product.</p>
+                        <p><i class="icon-credit-card"></i> Pay online or when receiving goods</p>
+                    </aside>
+
+
+                </div>
+            </div>
+            <div class="ps-section--default">
+                <div class="ps-section__header">
+                    <h3>Related products</h3>
+                </div>
+                <div class="ps-section__content">
+                    <div class="ps-carousel--nav owl-slider" data-owl-auto="true" data-owl-loop="true"
+                        data-owl-speed="10000" data-owl-gap="30" data-owl-nav="true" data-owl-dots="true"
+                        data-owl-item="6" data-owl-item-xs="2" data-owl-item-sm="2" data-owl-item-md="3"
+                        data-owl-item-lg="4" data-owl-item-xl="5" data-owl-duration="1000" data-owl-mousedrag="on">
+                        {%for i in related%}
+                        <div class="ps-product">
+                            <div class="ps-product__thumbnail"><a href="{% url 'products:single_product' i.id %}"><img
+                                        src="{{ i.picture.url }}" alt="" /></a>
+
+                            </div>
+                            <div class="ps-product__container"><a class="ps-product__vendor" href="#">Robert's Store</a>
+                                <div class="ps-product__content"><a class="ps-product__title"
+                                        href="product-default.html">{{ i.product_name }}</a>
+                                    <div class="ps-product__rating">
+                                        <select class="ps-rating" data-read-only="true">
+
+                                        </select>
+                                    </div>
+                                    <p class="ps-product__price">${{ i.price }}</p>
+                                </div>
+                                <div class="ps-product__content hover"><a class="ps-product__title"
+                                        href="product-default.html">{{i.product_name}}</a>
+                                    <p class="ps-product__price">${{ i.price }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div id="back2top"><i class="icon icon-arrow-up"></i></div>
+    <div class="ps-site-overlay"></div>
+    <div class="ps-panel--sidebar" id="cart-mobile">
+        <div class="ps-panel__header">
+            <h3>Shopping Cart</h3>
+        </div>
+        <div class="navigation__content">
+            <div class="ps-cart--mobile">
+                <div class="ps-cart__content">
+                    <div class="ps-product--cart-mobile">
+                        <div class="ps-product__thumbnail"><a href="#"><img src="img/products/clothing/7.jpg"
+                                    alt=""></a></div>
+                        <div class="ps-product__content"><a class="ps-product__remove" href="#"><i
+                                    class="icon-cross"></i></a><a href="product-default.html">MVMTH Classical Leather
+                                Watch In Black</a>
+                            <p><strong>Sold by:</strong> YOUNG SHOP</p><small>1 x $59.99</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="ps-cart__footer">
+                    <h3>Sub Total:<strong>$59.99</strong></h3>
+                    <figure><a class="ps-btn" href="shopping-cart.html">View Cart</a><a class="ps-btn"
+                            href="checkout.html">Checkout</a></figure>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--include ../../data/menu/menu-product-categories-->
+
+
+
+
+
+
+
+
+</div>
+{% endblock content %}

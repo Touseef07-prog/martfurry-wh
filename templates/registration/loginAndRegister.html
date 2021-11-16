@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/market-place-1.css' %}">
+{% endblock head %}
+{% block title %}Login | Register{% endblock title %}
+{% block content %}
+<div class="ps-page--my-account">
+    <div class="ps-breadcrumb">
+        <div class="container">
+            <ul class="breadcrumb">
+                <li><a href="index.html">Home</a></li>
+                <li>My account</li>
+            </ul>
+        </div>
+    </div>
+    <div class="ps-my-account">
+        <div class="container">
+            {% include 'components/_alerts.html' %}
+            <div class="ps-form--account ps-tab-root">
+                <ul class="ps-tab-list">
+                    <li {% if active == 'login' %} class="active" {% endif %}>
+                        <a href="#sign-in">Login</a></li>
+
+                    <li {% if active == 'register' %} class="active" {% endif %}><a href="#sign-up">Register</a></li>
+                </ul>
+                <div class="ps-tabs">
+                    <div {% if active == 'login' %} class="ps-tab active" {% else %} class="ps-tab" {% endif %}
+                        id="sign-in">
+                        <div class="ps-form__content">
+                            <h5>Log In Your Account</h5>
+                            <form action="{% url 'registration:login' %}" method="post">
+                                {% csrf_token %}
+                                <div class="form-group">
+
+                                    {{login_form.email}}
+                                </div>
+                                <div class="form-group form-forgot">
+                                    {{login_form.password}}<a href="{% url 'registration:password_reset' %}">Forgot?</a>
+
+                                </div>
+                                <div class="form-group">
+                                    <div class="ps-checkbox">
+                                        <input class="form-control" type="checkbox" id="remember-me"
+                                            name="remember-me" />
+                                        <label for="remember-me">Rememeber me</label>
+                                    </div>
+                                </div>
+                                <div class="form-group submtit">
+                                    <input type="submit" value="Login" class="ps-btn ps-btn--fullwidth">
+                                </div>
+                            </form>
+                        </div>
+                        <br>
+                    </div>
+                    <div {% if active == 'register' %} class="ps-tab active" {% else %} class="ps-tab" {% endif %}
+                        id="sign-up">
+                        <div class="ps-form__content">
+                            <h5>Register An Account</h5>
+                            <form action="{% url 'registration:register' %}" method="post">
+                                {% csrf_token %}
+                                <!-- {{signup_form.as_p}} -->
+
+                                <div class="form-group">
+                                    {{ signup_form.email }}
+                                </div>
+                                <div class="form-group">
+                                    {{ signup_form.password1 }}
+
+                                </div>
+                                <div class="form-group">
+                                    {{ signup_form.password2 }}
+
+                                </div>
+                                <div class="form-group submtit">
+                                    <button class="ps-btn ps-btn--fullwidth">Register</button>
+                                </div>
+                            </form>
+
+                        </div>
+                        <br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Admin{% endblock title %}
+{% block head %}
+
+<link rel="stylesheet" href="{% static 'css/market-place-4.css' %}">
+
+{% endblock head %}
+{% block content %}
+{% include 'components/_alerts.html' %}
+<div class="ps-vendor-dashboard">
+    <div class="container">
+
+        <div class="ps-section__content">
+            <ul class="ps-section__links">
+                <li class="active"><a>Dashboard</a></li>
+                {% comment %} <li><a href="#">Product</a></li> {% endcomment %}
+
+            </ul>
+            <div class="ps-block--vendor-dashboard">
+                <div class="ps-block__header">
+                    <h3>Subscription Report</h3>
+                </div>
+                <div class="ps-block__content">
+                    <form class="ps-form--vendor-datetimepicker" action="index.html" method="get">
+
+                    </form>
+                    <div class="table-responsive">
+
+                        <table class="table ps-table ps-table--vendor">
+                            <thead>
+                                <tr>
+                                    <th>Subscription</th>
+                                    <th>Product</th>
+                                    <th>Price</th>
+                                    <th>Qunatity</th>
+                                    <th>Total</th>
+                                    <th>Next Invoice</th>
+                                    <th>Address</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+
+                        {% for r in subscription %}
+
+                            <tbody>
+                                <tr>
+                                    <td>{{r.current_period_start}}</td>
+                                    <td>{{r.product}}</td>
+                                    <td>${{r.amount}}</td>
+                                    <td>{{r.quantity}}</td>
+                                    <td>${{r.total}}</td>
+                                    <td>{{r.current_period_end}}</td>
+                                
+                                    {% if r.address.address_1 == "" or r.address.address_1 == None %}
+                                        <td> <a href="{% url 'pages:address' r.id r.product.id r.quantity %}"> Add Address </a></td>
+                                    {% else %}
+                                        <td style="color:green"> Added </td>
+                                    {% endif %}
+
+
+                                    <td>{{r.status}}</td>
+                                
+                                    {% if r.status == "active" %}
+                                        <td> <a href="{% url 'pages:cancel_subscription' r.id %}" onclick='return checkdel()'> Change </a></td>
+                                    {% elif r.status == "canceled" %}
+                                        <td>-</td>
+                                    {% endif %}
+
+                                </tr>
+                            </tbody>
+
+                        {% endfor %}
+
+
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <script>
+        function checkdel(){
+            return confirm('Are you sure you want to cancel the subscription? \n\nNote:- Once you canceled it cannot be reversed');
+        }
+    </script>
+
+
+{% endblock content %}

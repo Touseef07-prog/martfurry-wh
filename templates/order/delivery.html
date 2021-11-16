@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Admin{% endblock title %}
+{% block head %}
+
+<link rel="stylesheet" href="{% static 'css/market-place-4.css' %}">
+
+{% endblock head %}
+{% block content %}
+{% include 'components/_alerts.html' %}
+<div class="ps-vendor-dashboard">
+    <div class="container">
+
+        <div class="ps-section__content">
+            <ul class="ps-section__links">
+                <li class="active"><a href="{% url 'order:deliver' %}" >All</a></li>
+                    <br>
+                    <br>
+                    <ul>
+                        <li {% if class_active == "delivered" %} class="active" {% endif %}> <a href="{% url 'order:deliver' "delivered" %}">Delivered</a></li>
+                        <li {% if class_active == "undelivered" %} class="active" {% endif %}> <a href="{% url 'order:deliver' "undelivered" %} ">Not-Delivered</a></li>
+                    
+                    </ul>
+            </ul>
+            <div class="ps-block--vendor-dashboard">
+                <div class="ps-block__header">
+                    <h3>Delivery Report</h3>
+                </div>
+                <div class="ps-block__content">
+                    <form class="ps-form--vendor-datetimepicker" action="index.html" method="get">
+
+                    </form>
+                    <div class="table-responsive">
+
+                        <table class="table ps-table ps-table--vendor">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Name</th>
+                                    <th>Country</th>
+                                    <th>Address 1</th>
+                                    <th>Address 2</th>
+                                    <th>City</th>
+                                    <th>State</th>
+                                    <th>Contact</th>
+                                    <th>Item</th>
+                                    <th>Quantity</th>
+                                    <th>Status</th>
+                                    {% if action == "undelivered" or action == None %}
+                                        <th>Action</th>
+                                    {% endif %}
+                                </tr>
+                            </thead>
+
+                        {% for r in items %}
+
+                            <tbody>
+                                <tr>
+                                    <td> {{r.date}}</td>
+                                    <td> {{r.name}}</td>
+                                    <td> {{r.country}}</td>
+                                    <td> {{r.address_1}}</td>
+                                    <td> {{r.address_2}}</td>
+                                    <td> {{r.city}}</td>
+                                    <td> {{r.state}}</td>
+                                    <td> {{r.contact}}</td>
+                                    <td> {{r.product}}</td>
+                                    <td> {{r.quantity}}</td>
+                                    <td> {{r.delivery}}</td>
+                                    {% if r.delivery == "undelivered" %}
+                                        <td> <a href="{% url 'order:deliver_done' r.pk %}"> Change </a></td>
+                                    {% endif %}
+
+                                </tr>
+                            </tbody>
+
+                        {% endfor %}
+
+
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <script>
+        function checkdel(){
+            return confirm('Are you sure you want to cancel the subscription? \n\nNote:- Once you canceled it cannot be reversed');
+        }
+    </script>
+
+
+{% endblock content %}
